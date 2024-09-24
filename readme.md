@@ -4,6 +4,19 @@
 
 ### Create a solana wallet and get some devnet founds from the faucet.
 
+### Enter frontend folder + Install dependencies
+
+```
+cd frontend
+npm install
+```
+### Run project
+
+```
+npm run dev
+```
+
+
 Create solana wallet public key + secret key with: 
 
 - `yarn keygen`
