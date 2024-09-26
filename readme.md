@@ -1,23 +1,27 @@
-# Build on Solana Course
+# Restaurant reviews Solana DAPP 
 
-## Restaurant reviews final project
+Descentralized application built with rust and running on Solana devnet 
 
 ### Create a solana wallet and get some devnet founds from the faucet.
 
-### Enter frontend folder + Install dependencies
 
-```
-cd frontend
+
+### Setting up the environment
+
+First,enter to the frontend folder and install required libraries:
+
+```bash
 npm install
 ```
-### Run project
 
-```
+Then, run the development server:
+
+```bash
 npm run dev
 ```
 
 
-Create solana wallet public key + secret key with: 
+Create solana wallet public key + secret key witxh: 
 
 - `yarn keygen`
 

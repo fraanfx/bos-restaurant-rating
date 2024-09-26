@@ -71,7 +71,7 @@ const ReviewForm: FC<FormProps> = ({
                         placeholder="Description"
                         value={rating}
                         onChange={(e) => setRating(Number(e.target.value))}
-                        max={10}
+                        max={5}
                         min={0}
                     />
                 </div>
