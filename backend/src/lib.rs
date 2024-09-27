@@ -33,12 +33,14 @@ pub fn process_instruction(
             title,
             rating,
             description,
-        } => add_review(program_id, accounts, title, rating, description),
+            location,
+        } => add_review(program_id, accounts, title, rating, description, location),
         ReviewInstruction::UpdateReview {
             title,
             rating,
             description,
-        } => update_review(program_id, accounts, title, rating, description),
+            location,
+        } => update_review(program_id, accounts, title, rating, description, location),
     }
 }
 
@@ -48,11 +50,14 @@ pub fn add_review(
     title: String,
     rating: u8,
     description: String,
+    location: String,
 ) -> ProgramResult {
     msg!("Adding  review...");
     msg!("Title: {}", title);
     msg!("Rating: {}", rating);
     msg!("Description: {}", description);
+    msg!("Location: {}", location);
+    msg!("Review Added successfully");
 
     let account_info_iter = &mut accounts.iter();
 
@@ -74,7 +79,7 @@ pub fn add_review(
         return Err(ProgramError::InvalidArgument);
     }
 
-    if rating > 10 || rating < 1 {
+    if rating > 5 || rating < 1 {
         return Err(ReviewError::InvalidRating.into());
     }
 
@@ -119,6 +124,7 @@ pub fn add_review(
     account_data.title = title;
     account_data.rating = rating;
     account_data.description = description;
+    account_data.location = location;
     account_data.is_initialized = true;
 
     msg!("serializing account");
@@ -134,6 +140,7 @@ pub fn update_review(
     _title: String,
     rating: u8,
     description: String,
+    location: String,
 ) -> ProgramResult {
     msg!("Updating  review...");
 
@@ -174,7 +181,7 @@ pub fn update_review(
         return Err(ReviewError::UninitializedAccount.into());
     }
 
-    if rating > 10 || rating < 1 {
+    if rating > 5 || rating < 1 {
         return Err(ReviewError::InvalidRating.into());
     }
 
@@ -182,18 +189,168 @@ pub fn update_review(
     msg!("Title: {}", account_data.title);
     msg!("Rating: {}", account_data.rating);
     msg!("Description: {}", account_data.description);
+    msg!("Location: {}", account_data.location);
 
     account_data.rating = rating;
     account_data.description = description;
+    account_data.location = location;
 
     msg!("Review after update:");
     msg!("Title: {}", account_data.title);
     msg!("Rating: {}", account_data.rating);
     msg!("Description: {}", account_data.description);
+    msg!("Location: {}", account_data.location);
 
     msg!("serializing account");
     account_data.serialize(&mut &mut pda_account.data.borrow_mut()[..])?;
     msg!("state account serialized");
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use solana_program::clock::Epoch;
+    use solana_program::pubkey::Pubkey;
+    use solana_program::rent::Rent;
+    use solana_program::system_program;
+
+    // Helper function to create dummy AccountInfo
+    fn create_account_info<'a>(
+        key: &'a Pubkey,
+        is_signer: bool,
+        is_writable: bool,
+        lamports: &'a mut u64,
+        data: &'a mut [u8],
+        owner: &'a Pubkey,
+    ) -> AccountInfo<'a> {
+        AccountInfo::new(
+            key,
+            is_signer,
+            is_writable,
+            lamports,
+            data,
+            owner,
+            false,
+            Epoch::default(),
+        )
+    }
+
+    #[test]
+    fn test_process_instruction_add_review() {
+        let program_id = Pubkey::new_unique();
+        let user_key = Pubkey::new_unique();
+        let (pda, _) = Pubkey::find_program_address(&[user_key.as_ref(), b"Some title"], &program_id);
+
+        let mut user_account = user_key;
+        let mut lamports = 100000;
+        let mut data = vec![0; 1000];
+        
+        let user_account_info = create_account_info(
+            &user_account,
+            true,
+            false,
+            &mut lamports,
+            &mut data,
+            &system_program::id(),
+        );
+
+        let mut pda_account = pda;
+        let mut pda_lamports = 0;
+        let mut pda_data = vec![0; 1000];
+        
+        let pda_account_info = create_account_info(
+            &pda_account,
+            false,
+            true,
+            &mut pda_lamports,
+            &mut pda_data,
+            &program_id,
+        );
+
+        let system_program_account_info = create_account_info(
+            &system_program::id(),
+            false,
+            false,
+            &mut 0,
+            &mut [],
+            &system_program::id(),
+        );
+
+        let accounts = vec![
+            user_account_info,
+            pda_account_info,
+            system_program_account_info,
+        ];
+
+        let instruction_data = ReviewInstruction::AddReview {
+            title: "Some title".to_string(),
+            rating: 5,
+            description: "Great!".to_string(),
+            location: "Somewhere".to_string(),
+        }
+        .try_to_vec()
+        .unwrap();
+
+        let result = process_instruction(&program_id, &accounts, &instruction_data);
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn test_process_instruction_update_review() {
+        let program_id = Pubkey::new_unique();
+        let user_key = Pubkey::new_unique();
+        let (pda, _) = Pubkey::find_program_address(&[user_key.as_ref(), b"Some title"], &program_id);
+
+        let mut user_account = user_key;
+        let mut lamports = 100000;
+        let mut data = vec![0; 1000];
+        
+        let user_account_info = create_account_info(
+            &user_account,
+            true,
+            false,
+            &mut lamports,
+            &mut data,
+            &system_program::id(),
+        );
+
+        let mut pda_account = pda;
+        let mut pda_lamports = 0;
+        let mut pda_data = AccountState {
+            title: "Some title".to_string(),
+            rating: 4,
+            description: "Good".to_string(),
+            location: "Somewhere".to_string(),
+            is_initialized: true,
+        }
+        .try_to_vec()
+        .unwrap();
+        
+        let pda_account_info = create_account_info(
+            &pda_account,
+            false,
+            true,
+            &mut pda_lamports,
+            &mut pda_data,
+            &program_id,
+        );
+
+        let accounts = vec![user_account_info, pda_account_info];
+
+        let instruction_data = ReviewInstruction::UpdateReview {
+            title: "Some title".to_string(),
+            rating: 5,
+            description: "Great!".to_string(),
+            location: "Somewhere else".to_string(),
+        }
+        .try_to_vec()
+        .unwrap();
+
+        let result = process_instruction(&program_id, &accounts, &instruction_data);
+        assert!(result.is_ok());
+    }
+
+    // Add more tests for error cases...
 }
