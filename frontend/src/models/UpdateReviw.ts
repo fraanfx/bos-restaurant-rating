@@ -31,7 +31,7 @@ export class Review {
 
     serialize(): Buffer {
         const buffer = Buffer.alloc(1000);
-        this.borshInstructionSchema.encode({ ...this, variant: 0 }, buffer);
+        this.borshInstructionSchema.encode({ ...this, variant: 1 }, buffer);
         return buffer.slice(0, this.borshInstructionSchema.getSpan(buffer));
     }
 

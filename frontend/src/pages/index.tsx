@@ -8,6 +8,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import ReviewForm from "@/components/Form";
 
 //Replace with your own Program_id
+//8ewQYYxHYkpErrJApoY4vsaF8VvAdTt6gKwXyXvZMgiQ
 const REVIEW_PROGRAM_ID = "8ewQYYxHYkpErrJApoY4vsaF8VvAdTt6gKwXyXvZMgiQ";
 
 export default function Home() {
@@ -21,6 +22,7 @@ export default function Home() {
     const [title, setTitle] = useState("");
     const [rating, setRating] = useState(0);
     const [description, setDescription] = useState("");
+    const [location, setLocation] = useState("");
 
     useEffect(() => {
         const fetchAccounts = async () => {
@@ -30,7 +32,7 @@ export default function Home() {
     }, []);
 
     const handleSubmit = () => {
-        const review = new Review(title, rating, description);
+        const review = new Review(title, rating, description, location);
         handleTransactionSubmit(review);
     };
 
@@ -79,7 +81,7 @@ export default function Home() {
                 alert(JSON.stringify(e))
         }
     };
-
+    console.log(reviews)
     return (
         <main
             className={`flex min-h-screen flex-col items-center justify-between p-24 `}
@@ -96,6 +98,7 @@ export default function Home() {
                     setTitle={setTitle}
                     setDescription={setDescription}
                     setRating={setRating}
+                    setLocation={setLocation}
                     handleSubmit={handleSubmit}
                 />
             </div>

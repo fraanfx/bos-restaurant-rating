@@ -9,6 +9,7 @@ pub struct AccountState {
     pub rating: u8,
     pub description: String,
     pub title: String,
+    pub location: String,
 }
 
 impl Sealed for AccountState {}
@@ -27,7 +28,7 @@ pub enum ReviewError {
     #[error("PDA derived does not equal PDA passed in")]
     InvalidPDA,
 
-    #[error("Rating greater than 10 or less than 1")]
+    #[error("Rating greater than 5 or less than 1")]
     InvalidRating,
 }
 
