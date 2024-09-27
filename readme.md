@@ -3,6 +3,7 @@
 Descentralized application built with rust and running on Solana devnet 
 
 
+
 Welcome to the **Restaurant review** project repository! This decentralized application (DApp) built with rust  leverages blockchain technology to implement a review platform on the Solana devnet network. Participants can place reviews about restaurants.
 
 ## Table of Contents
@@ -70,7 +71,9 @@ Follow these steps to set up the project locally and start participating in web3
 
 3. Connect your Solana wallet (e.g., Phantom) to the DApp.
 
+
 4. Browse ongoing reviews and place your own review.
+
 
 ## Smart Contracts
 
