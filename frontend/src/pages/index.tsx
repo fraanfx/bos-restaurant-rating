@@ -8,6 +8,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import ReviewForm from "@/components/Form";
 
 //Replace with your own Program_id
+//8ewQYYxHYkpErrJApoY4vsaF8VvAdTt6gKwXyXvZMgiQ
 const REVIEW_PROGRAM_ID = "8ewQYYxHYkpErrJApoY4vsaF8VvAdTt6gKwXyXvZMgiQ";
 
 export default function Home() {
@@ -80,7 +81,7 @@ export default function Home() {
                 alert(JSON.stringify(e))
         }
     };
-
+    console.log(reviews)
     return (
         <main
             className={`flex min-h-screen flex-col items-center justify-between p-24 `}

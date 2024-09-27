@@ -7,7 +7,7 @@ interface CardProps {
 
 const ReviewCard: FC<CardProps> = ({ review }) => {
     const { title, description, rating, location } = review;
-
+    console.log(review)
     return (
         <div className="relative group rounded-lg border border-transparent px-5 py-4 transition-colors border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-800/30 m-4">
             <h2 className={`mb-3 text-2xl font-semibold`}>
