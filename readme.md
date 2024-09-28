@@ -32,7 +32,7 @@ The **Web3 Restaurant reviews DApp** provides a user-friendly interface to place
 
 ## Getting Started
 
-Follow these steps to set up the project locally and start participating in web3 auctions.
+Follow these steps to set up the project locally and start placing your own restaurant reviews.
 
 ### Prerequisites
 
@@ -122,7 +122,7 @@ ProgramID: 8ewQYYxHYkpErrJApoY4vsaF8VvAdTt6gKwXyXvZMgiQ
 
 ## Frontend
 
-The DApp frontend is built using modern web technologies including React.js. It provides an intuitive and interactive user interface for auction participation.
+The DApp frontend is built using modern web technologies including React.js. It provides an intuitive and interactive user interface for placing reviews.
 
 - **React.js**: Powers the DApp's user interface.
 - **Web3.js**: The Solana JavaScript API for smart contract interaction.
